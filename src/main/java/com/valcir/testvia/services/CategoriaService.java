@@ -8,6 +8,10 @@ import org.springframework.stereotype.Service;
 import com.valcir.testvia.domain.Categoria;
 import com.valcir.testvia.repositories.CategoriaRepository;
 
+import com.valcir.testvia.services.exception.ObjectNotFoundException;
+
+
+
 @Service
 public class CategoriaService {
 
@@ -15,10 +19,11 @@ public class CategoriaService {
 	private CategoriaRepository repo;
 	
 	
-	public Categoria buscar(Integer id) {
+	public Categoria buscar(Integer id) throws ObjectNotFoundException {
 
 		Optional<Categoria> obj= repo.findById(id);
-		return obj.orElse(null);
+		return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado!, id: " + id
+				+ ", Tipo: " + Categoria.class.getName()));
 		
 	}
 	
