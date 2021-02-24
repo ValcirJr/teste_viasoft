@@ -13,6 +13,7 @@ import com.valcir.testvia.domain.Cidade;
 import com.valcir.testvia.domain.Cliente;
 import com.valcir.testvia.domain.Endereco;
 import com.valcir.testvia.domain.Estado;
+import com.valcir.testvia.domain.ItemPedido;
 import com.valcir.testvia.domain.Pagamento;
 import com.valcir.testvia.domain.PagamentoComBoleto;
 import com.valcir.testvia.domain.PagamentoComCartao;
@@ -25,6 +26,7 @@ import com.valcir.testvia.repositories.CidadeRepository;
 import com.valcir.testvia.repositories.ClienteRepository;
 import com.valcir.testvia.repositories.EnderecoRepository;
 import com.valcir.testvia.repositories.EstadoRepository;
+import com.valcir.testvia.repositories.ItemPedidoRepository;
 import com.valcir.testvia.repositories.PagamentoRepository;
 import com.valcir.testvia.repositories.PedidoRepository;
 import com.valcir.testvia.repositories.ProdutoRepository;
@@ -55,6 +57,9 @@ public class TestViasoftApplication implements CommandLineRunner{
 	
 	@Autowired
 	private PagamentoRepository pgmtoRepo;
+	
+	@Autowired
+	private ItemPedidoRepository ipRepo;
 	
 	
 	public static void main(String[] args) {
@@ -108,6 +113,18 @@ public class TestViasoftApplication implements CommandLineRunner{
 		ped2.setPagamento(pgmto2);		
 		
 		cli1.getPedidos().addAll(Arrays.asList(ped1,ped2));
+		
+		ItemPedido ip1 = new ItemPedido(ped1, p1, 0.00, 1, 2000.00);
+		ItemPedido ip2 = new ItemPedido(ped1, p3, 0.00, 2, 80.00);
+		ItemPedido ip3 = new ItemPedido(ped2, p2, 100.00, 1, 800.00);
+		
+		ped1.getItens().addAll(Arrays.asList(ip1, ip2));
+		ped2.getItens().addAll(Arrays.asList(ip3));
+		
+		p1.getItens().addAll(Arrays.asList(ip1));
+		p2.getItens().addAll(Arrays.asList(ip3));
+		p3.getItens().addAll(Arrays.asList(ip2));
+		
 				
 		catRepo.saveAll(Arrays.asList(cat1, cat2));
 		prodRepo.saveAll(Arrays.asList(p1,p2,p3));
@@ -117,6 +134,7 @@ public class TestViasoftApplication implements CommandLineRunner{
 		endRepo.saveAll(Arrays.asList(e1, e2));
 		pedRepo.saveAll(Arrays.asList(ped1, ped2));
 		pgmtoRepo.saveAll(Arrays.asList(pgmto1, pgmto2));
+		ipRepo.saveAll(Arrays.asList(ip1,ip2,ip3));
 	}
 
 }
