@@ -21,21 +21,26 @@ public class Estado implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String nome;	
+	private String sigla;
 	
 	@OneToMany(mappedBy="estado")	
 	@JsonIgnore
 	private List<Cidade> cidades = new ArrayList<>();
 	
+	@OneToMany(mappedBy="estado")	
+	@JsonIgnore
+	private List<DisponibilidadeServicoNF> disponibilidadeNF = new ArrayList<>();
 	
 	public Estado() {
 		// TODO Auto-generated constructor stub
 	}
 
 
-	public Estado(Integer id, String nome) {
+	public Estado(Integer id, String nome, String sigla) {
 		super();
 		this.id = id;
 		this.nome = nome;
+		this.sigla = sigla;
 
 	}
 
@@ -67,6 +72,27 @@ public class Estado implements Serializable{
 
 	public void setCidades(List<Cidade> cidades) {
 		this.cidades = cidades;
+	}
+
+	
+	public List<DisponibilidadeServicoNF> getDisponibilidadeNF() {
+		return disponibilidadeNF;
+	}
+
+
+	public void setDisponibilidadeNF(List<DisponibilidadeServicoNF> disponibilidadeNF) {
+		this.disponibilidadeNF = disponibilidadeNF;
+	}
+
+
+
+	public String getSigla() {
+		return sigla;
+	}
+
+
+	public void setSigla(String sigla) {
+		this.sigla = sigla;
 	}
 
 

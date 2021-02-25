@@ -9,8 +9,9 @@ import org.jsoup.nodes.Element;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.Scheduled;
 
-/*
+
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +37,13 @@ import com.valcir.testvia.repositories.ItemPedidoRepository;
 import com.valcir.testvia.repositories.PagamentoRepository;
 import com.valcir.testvia.repositories.PedidoRepository;
 import com.valcir.testvia.repositories.ProdutoRepository;
-*/
-
+ 
 @SpringBootApplication
 public class TestViasoftApplication implements CommandLineRunner{
-	/*
+	
+	
+
+	
 	@Autowired
 	private CategoriaRepository catRepo;	
 	@Autowired
@@ -59,47 +62,21 @@ public class TestViasoftApplication implements CommandLineRunner{
 	private PagamentoRepository pgmtoRepo;	
 	@Autowired
 	private ItemPedidoRepository ipRepo;
-	*/
 	
-	private String status = "";
 	
 	public static void main(String[] args) {
 		SpringApplication.run(TestViasoftApplication.class, args);
 	}
 
 	
+	
+	
 	@Override
 	public void run(String... args) throws Exception {
 		
-		final String url = "http://www.nfe.fazenda.gov.br/portal/disponibilidade.aspx";
-		
-		try {
-			
-			final Document document = Jsoup.connect(url).get();
-
-			for(Element row : document.select("table.tabelaListagemDados tr")) {
-				if(row.select("td:nth-of-type(1)").text().equals("")) {
-					continue;
-				}else {
-					final String estado = row.select("td:nth-of-type(1)").outerHtml();
-					
-					if(row.select("td:nth-of-type(6)").outerHtml().contains("verde")) {
-						status = "Disponível";
-					}else if(row.select("td:nth-of-type(6)").outerHtml().contains("amarela")) {
-						status = "Instável";
-					}else {
-						status = "Indisponível";
-					}
-					
-					System.out.println(estado + " : " + status);
-				}
-			}
-			
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
 	
-	/*	Categoria cat1 = new Categoria(null, "Informática");
+	
+		Categoria cat1 = new Categoria(null, "Informática");
 		Categoria cat2 = new Categoria(null, "Escritório");
 		
 		Produto p1 = new Produto(null, "Comuptador", 2000.00);
@@ -114,8 +91,34 @@ public class TestViasoftApplication implements CommandLineRunner{
 		p3.getCategorias().addAll(Arrays.asList(cat1));
 		
 		
-		Estado est1 = new Estado(null, "Minas Gerais");
-		Estado est2 = new Estado(null, "São Paulo");
+		Estado est1 = new Estado(null, "Acre", "AC");
+		Estado est2 = new Estado(null, "Alagoas", "AL");
+		Estado est3 = new Estado(null, "Amapá", "AP");
+		Estado est4 = new Estado(null, "Amazonas", "AM");
+		Estado est5 = new Estado(null, "Bahia", "BA");
+		Estado est6 = new Estado(null, "Ceará", "CE");
+		Estado est7 = new Estado(null, "Distrito Fedaral", "DF");
+		Estado est8 = new Estado(null, "Espírito Santo", "ES");
+		Estado est9 = new Estado(null, "Goiás", "GO");
+		Estado est10 = new Estado(null, "Maranhão", "MA");
+		Estado est11 = new Estado(null, "Mato Grosso", "MT");
+		Estado est12 = new Estado(null, "Mato Grosso do Sul", "MS");
+		Estado est13 = new Estado(null, "Minas Gerais", "MG");
+		Estado est14 = new Estado(null, "Pará", "PA");
+		Estado est15 = new Estado(null, "Paraíba", "PB");
+		Estado est16 = new Estado(null, "Paraná", "PR");
+		Estado est17 = new Estado(null, "Pernmbuco", "PE");
+		Estado est18 = new Estado(null, "Piauí", "PI");
+		Estado est19 = new Estado(null, "Rio de Janeiro", "RJ");
+		Estado est20 = new Estado(null, "Rio Grande do Norte", "RN");
+		Estado est21 = new Estado(null, "Rio Grande do Sul", "RS");
+		Estado est22 = new Estado(null, "Rondônio", "RO");
+		Estado est23 = new Estado(null, "Roraima", "RR");
+		Estado est24 = new Estado(null, "Santa Catarina", "SC");
+		Estado est25 = new Estado(null, "São Paulo", "SP");
+		Estado est26 = new Estado(null, "Sergipe", "SE");
+		Estado est27 = new Estado(null, "Tocantins", "TO");
+		
 		
 		Cidade c1 = new Cidade(null, "Uberlândia", est1);
 		Cidade c2 = new Cidade(null, "São Paulo", est2);
@@ -158,13 +161,15 @@ public class TestViasoftApplication implements CommandLineRunner{
 				
 		catRepo.saveAll(Arrays.asList(cat1, cat2));
 		prodRepo.saveAll(Arrays.asList(p1,p2,p3));
-		estRepo.saveAll(Arrays.asList(est1, est2));
+		estRepo.saveAll(Arrays.asList(est1, est2, est3, est4, est5, est6, est7, est8, est9, est10,
+				est11, est12, est13, est14, est15, est16, est17, est18, est19, est20,
+				est21, est22, est23, est24, est25, est26, est27));
 		cidRepo.saveAll(Arrays.asList(c1,c2,c3));
 		cliRepo.saveAll(Arrays.asList(cli1));
 		endRepo.saveAll(Arrays.asList(e1, e2));
 		pedRepo.saveAll(Arrays.asList(ped1, ped2));
 		pgmtoRepo.saveAll(Arrays.asList(pgmto1, pgmto2));
-		ipRepo.saveAll(Arrays.asList(ip1,ip2,ip3));*/
+		ipRepo.saveAll(Arrays.asList(ip1,ip2,ip3));
 	}
 
 }
