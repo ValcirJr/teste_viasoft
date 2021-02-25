@@ -1,13 +1,19 @@
 package com.valcir.testvia;
 
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+/*
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.valcir.testvia.domain.Categoria;
 import com.valcir.testvia.domain.Cidade;
 import com.valcir.testvia.domain.Cliente;
@@ -30,46 +36,70 @@ import com.valcir.testvia.repositories.ItemPedidoRepository;
 import com.valcir.testvia.repositories.PagamentoRepository;
 import com.valcir.testvia.repositories.PedidoRepository;
 import com.valcir.testvia.repositories.ProdutoRepository;
+*/
 
 @SpringBootApplication
 public class TestViasoftApplication implements CommandLineRunner{
-
+	/*
 	@Autowired
-	private CategoriaRepository catRepo;
-	
+	private CategoriaRepository catRepo;	
 	@Autowired
-	private ProdutoRepository prodRepo;
-	
+	private ProdutoRepository prodRepo;	
 	@Autowired
-	private EstadoRepository estRepo;
-	
+	private EstadoRepository estRepo;	
 	@Autowired 
 	private CidadeRepository cidRepo;
-	
 	@Autowired
-	private ClienteRepository cliRepo;
-	
+	private ClienteRepository cliRepo;	
 	@Autowired
-	private EnderecoRepository endRepo;
-	
+	private EnderecoRepository endRepo;	
 	@Autowired
-	private PedidoRepository pedRepo;
-	
+	private PedidoRepository pedRepo;	
 	@Autowired
-	private PagamentoRepository pgmtoRepo;
-	
+	private PagamentoRepository pgmtoRepo;	
 	@Autowired
 	private ItemPedidoRepository ipRepo;
+	*/
 	
+	private String status = "";
 	
 	public static void main(String[] args) {
 		SpringApplication.run(TestViasoftApplication.class, args);
 	}
 
+	
 	@Override
 	public void run(String... args) throws Exception {
+		
+		final String url = "http://www.nfe.fazenda.gov.br/portal/disponibilidade.aspx";
+		
+		try {
+			
+			final Document document = Jsoup.connect(url).get();
+
+			for(Element row : document.select("table.tabelaListagemDados tr")) {
+				if(row.select("td:nth-of-type(1)").text().equals("")) {
+					continue;
+				}else {
+					final String estado = row.select("td:nth-of-type(1)").outerHtml();
+					
+					if(row.select("td:nth-of-type(6)").outerHtml().contains("verde")) {
+						status = "Disponível";
+					}else if(row.select("td:nth-of-type(6)").outerHtml().contains("amarela")) {
+						status = "Instável";
+					}else {
+						status = "Indisponível";
+					}
+					
+					System.out.println(estado + " : " + status);
+				}
+			}
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 	
-		Categoria cat1 = new Categoria(null, "Informática");
+	/*	Categoria cat1 = new Categoria(null, "Informática");
 		Categoria cat2 = new Categoria(null, "Escritório");
 		
 		Produto p1 = new Produto(null, "Comuptador", 2000.00);
@@ -134,7 +164,7 @@ public class TestViasoftApplication implements CommandLineRunner{
 		endRepo.saveAll(Arrays.asList(e1, e2));
 		pedRepo.saveAll(Arrays.asList(ped1, ped2));
 		pgmtoRepo.saveAll(Arrays.asList(pgmto1, pgmto2));
-		ipRepo.saveAll(Arrays.asList(ip1,ip2,ip3));
+		ipRepo.saveAll(Arrays.asList(ip1,ip2,ip3));*/
 	}
 
 }
