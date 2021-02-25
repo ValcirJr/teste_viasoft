@@ -1,5 +1,9 @@
 package com.valcir.testvia.services;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -9,17 +13,20 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import com.valcir.testvia.domain.Autorizador;
+import com.valcir.testvia.domain.DisponibilidadeServicoNF;
+import com.valcir.testvia.repositories.AutorizadorRepository;
 import com.valcir.testvia.repositories.DisponibilidadeServicoNFRepository;
-import com.valcir.testvia.repositories.EstadoRepository;
+
 
 @Component 
 @EnableScheduling
 @Service
 public class ConsultaDisponibilidadeService {
 	
-	@Autowired
-	private EstadoRepository estRepo;
 	
+	@Autowired
+	private AutorizadorRepository autoRepo;
 	@Autowired
 	private DisponibilidadeServicoNFRepository dispoRepo;
 	
@@ -28,7 +35,6 @@ public class ConsultaDisponibilidadeService {
 	private final long SEGUNDO = 1000; 
     private final long MINUTO = SEGUNDO * 60; 
 
-	private String status = "";
 	
     
 	@Scheduled(fixedDelay = MINUTO * 5)
@@ -38,35 +44,35 @@ public class ConsultaDisponibilidadeService {
 			final Document document = Jsoup.connect(url).get();
 
 			for(Element row : document.select("table.tabelaListagemDados tr")) {
+				
+				Autorizador aut1 = new Autorizador();
+				List<Autorizador> auts = new ArrayList<>();
+				DisponibilidadeServicoNF dispoNF = new DisponibilidadeServicoNF();
 			
 				if(row.select("td:nth-of-type(1)").text().equals("")) {
 					continue;
 				
 				}else {
-					final String estado = row.select("td:nth-of-type(1)").text();
 					
-					if(estado.equals("SVAN")) {
-						
-					}else if(estado.equals("SVRS")) {
-						
-					}else if(estado.equals("SVC-AN")) {
-						
-					}else if(estado.endsWith("SVC-RS"))
+					final String autorizador = row.select("td:nth-of-type(1)").text();
 					
+					auts = autoRepo.findByNome(autorizador);
 					
+					if(auts.size() > 0)
+						aut1 = auts.get(0);
 					
-					
-					
+					dispoNF.setAutorizador(aut1);
 					
 					if(row.select("td:nth-of-type(6)").outerHtml().contains("verde")) {
-						status = "Disponível";
+						dispoNF.setDisponibilidade("Disponível");
 					}else if(row.select("td:nth-of-type(6)").outerHtml().contains("amarela")) {
-						status = "Instável";
+						dispoNF.setDisponibilidade("Instável");
 					}else {
-						status = "Indisponível";
+						dispoNF.setDisponibilidade("Indisponível");
 					}
 					
-					System.out.println(estado + " " + status);
+					dispoNF.setMomentoConsulta(new Date());
+					dispoRepo.save(dispoNF);
 				}
 			}
 			

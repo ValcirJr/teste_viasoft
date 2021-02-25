@@ -176,6 +176,7 @@ public class TestViasoftApplication implements CommandLineRunner{
 				est20, est21, est22, est23, est24, est26, est27));
 		aut14.getEstados().addAll(Arrays.asList(est1, est2, est3, est7, est8, est13, est14, est15, est18, 
 				est19, est20, est22, est23, est24, est25, est26, est27));
+		aut15.getEstados().addAll(Arrays.asList(est4, est5, est6, est9, est10, est11, est12, est16, est17));
 		
 		
 		
@@ -224,7 +225,7 @@ public class TestViasoftApplication implements CommandLineRunner{
 				est11, est12, est13, est14, est15, est16, est17, est18, est19, est20,
 				est21, est22, est23, est24, est25, est26, est27));
 		autoRepo.saveAll(Arrays.asList(aut1, aut2, aut3, aut4, aut5, aut6, aut7, aut8, aut9, aut10,
-				aut11, aut12, aut13, aut14));
+				aut11, aut12, aut13, aut14, aut15));
 		cidRepo.saveAll(Arrays.asList(c1,c2,c3));
 		cliRepo.saveAll(Arrays.asList(cli1));
 		endRepo.saveAll(Arrays.asList(e1, e2));
