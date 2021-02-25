@@ -40,14 +40,12 @@ public class Autorizador implements Serializable{
 	public Autorizador() {
 		// TODO Auto-generated constructor stub
 	}
-	public Autorizador(Integer id, String nome, List<Estado> estados,
-			List<DisponibilidadeServicoNF> disponiblidadeServicos) {
+	public Autorizador(Integer id, String nome) {
 		super();
 		this.id = id;
 		this.nome = nome;
-		this.estados = estados;
-		this.disponiblidadeServicos = disponiblidadeServicos;
 	}
+
 	public Integer getId() {
 		return id;
 	}

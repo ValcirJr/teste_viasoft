@@ -8,6 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import com.valcir.testvia.domain.Autorizador;
 import com.valcir.testvia.domain.Categoria;
 import com.valcir.testvia.domain.Cidade;
 import com.valcir.testvia.domain.Cliente;
@@ -21,6 +22,7 @@ import com.valcir.testvia.domain.Pedido;
 import com.valcir.testvia.domain.Produto;
 import com.valcir.testvia.domain.enums.EstadoPagamento;
 import com.valcir.testvia.domain.enums.TipoCliente;
+import com.valcir.testvia.repositories.AutorizadorRepository;
 import com.valcir.testvia.repositories.CategoriaRepository;
 import com.valcir.testvia.repositories.CidadeRepository;
 import com.valcir.testvia.repositories.ClienteRepository;
@@ -55,6 +57,8 @@ public class TestViasoftApplication implements CommandLineRunner{
 	private PagamentoRepository pgmtoRepo;	
 	@Autowired
 	private ItemPedidoRepository ipRepo;
+	@Autowired
+	private AutorizadorRepository autoRepo;
 	
 	
 	public static void main(String[] args) {
@@ -112,6 +116,68 @@ public class TestViasoftApplication implements CommandLineRunner{
 		Estado est26 = new Estado(null, "Sergipe", "SE");
 		Estado est27 = new Estado(null, "Tocantins", "TO");
 		
+		Autorizador aut1 = new Autorizador(null, "AM");
+		Autorizador aut2 = new Autorizador(null, "BA");
+		Autorizador aut3 = new Autorizador(null, "CE");
+		Autorizador aut4 = new Autorizador(null, "GO");
+		Autorizador aut5 = new Autorizador(null, "MG");
+		Autorizador aut6 = new Autorizador(null, "MS");
+		Autorizador aut7 = new Autorizador(null, "MT");
+		Autorizador aut8 = new Autorizador(null, "PE");
+		Autorizador aut9 = new Autorizador(null, "PR");
+		Autorizador aut10 = new Autorizador(null, "RS");
+		Autorizador aut11 = new Autorizador(null, "SP");
+		Autorizador aut12 = new Autorizador(null, "SVAN");
+		Autorizador aut13 = new Autorizador(null, "SVRS");
+		Autorizador aut14 = new Autorizador(null, "SVC-AN");
+		Autorizador aut15 = new Autorizador(null, "SVC-RS");
+		
+		est1.getAutorizadores().addAll(Arrays.asList(aut14, aut13));
+		est2.getAutorizadores().addAll(Arrays.asList(aut14, aut13));
+		est3.getAutorizadores().addAll(Arrays.asList(aut14, aut13));
+		est4.getAutorizadores().addAll(Arrays.asList(aut1, aut15));
+		est5.getAutorizadores().addAll(Arrays.asList(aut2,aut15));
+		est6.getAutorizadores().addAll(Arrays.asList(aut3,aut15));
+		est7.getAutorizadores().addAll(Arrays.asList(aut14, aut13));
+		est8.getAutorizadores().addAll(Arrays.asList(aut13, aut14));
+		est9.getAutorizadores().addAll(Arrays.asList(aut4, aut15));
+		est10.getAutorizadores().addAll(Arrays.asList(aut12, aut15));
+		est11.getAutorizadores().addAll(Arrays.asList(aut7, aut15));
+		est12.getAutorizadores().addAll(Arrays.asList(aut6, aut15));
+		est13.getAutorizadores().addAll(Arrays.asList(aut5, aut14));
+		est14.getAutorizadores().addAll(Arrays.asList(aut13, aut14));
+		est15.getAutorizadores().addAll(Arrays.asList(aut13, aut14));
+		est16.getAutorizadores().addAll(Arrays.asList(aut9, aut15));
+		est17.getAutorizadores().addAll(Arrays.asList(aut8,aut15));
+		est18.getAutorizadores().addAll(Arrays.asList(aut13, aut14));
+		est19.getAutorizadores().addAll(Arrays.asList(aut13, aut14));
+		est20.getAutorizadores().addAll(Arrays.asList(aut13, aut14));
+		est21.getAutorizadores().addAll(Arrays.asList(aut10, aut13));
+		est22.getAutorizadores().addAll(Arrays.asList(aut13, aut14));
+		est23.getAutorizadores().addAll(Arrays.asList(aut13, aut14));
+		est24.getAutorizadores().addAll(Arrays.asList(aut13, aut14));
+		est25.getAutorizadores().addAll(Arrays.asList(aut11, aut14));
+		est26.getAutorizadores().addAll(Arrays.asList(aut13, aut14));
+		est27.getAutorizadores().addAll(Arrays.asList(aut13, aut14));
+		
+		aut1.getEstados().addAll(Arrays.asList(est4));
+		aut2.getEstados().addAll(Arrays.asList(est5));
+		aut3.getEstados().addAll(Arrays.asList(est6));
+		aut4.getEstados().addAll(Arrays.asList(est9));
+		aut5.getEstados().addAll(Arrays.asList(est13));
+		aut6.getEstados().addAll(Arrays.asList(est12));
+		aut7.getEstados().addAll(Arrays.asList(est11));
+		aut8.getEstados().addAll(Arrays.asList(est17));
+		aut9.getEstados().addAll(Arrays.asList(est16));
+		aut10.getEstados().addAll(Arrays.asList(est21));
+		aut11.getEstados().addAll(Arrays.asList(est25));
+		aut12.getEstados().addAll(Arrays.asList(est10));
+		aut13.getEstados().addAll(Arrays.asList(est1, est2, est3, est7, est8, est14, est15, est18, est19,
+				est20, est21, est22, est23, est24, est26, est27));
+		aut14.getEstados().addAll(Arrays.asList(est1, est2, est3, est7, est8, est13, est14, est15, est18, 
+				est19, est20, est22, est23, est24, est25, est26, est27));
+		
+		
 		
 		Cidade c1 = new Cidade(null, "Uberlândia", est1);
 		Cidade c2 = new Cidade(null, "São Paulo", est2);
@@ -157,6 +223,8 @@ public class TestViasoftApplication implements CommandLineRunner{
 		estRepo.saveAll(Arrays.asList(est1, est2, est3, est4, est5, est6, est7, est8, est9, est10,
 				est11, est12, est13, est14, est15, est16, est17, est18, est19, est20,
 				est21, est22, est23, est24, est25, est26, est27));
+		autoRepo.saveAll(Arrays.asList(aut1, aut2, aut3, aut4, aut5, aut6, aut7, aut8, aut9, aut10,
+				aut11, aut12, aut13, aut14));
 		cidRepo.saveAll(Arrays.asList(c1,c2,c3));
 		cliRepo.saveAll(Arrays.asList(cli1));
 		endRepo.saveAll(Arrays.asList(e1, e2));
