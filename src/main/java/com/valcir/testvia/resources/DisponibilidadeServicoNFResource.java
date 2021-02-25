@@ -18,6 +18,12 @@ public class DisponibilidadeServicoNFResource {
 	@Autowired
 	private ConsultaDisponibilidadeService service;
 	
+	@RequestMapping(value="/", method=RequestMethod.GET)
+	public ResponseEntity<?> listarTodosEstado() throws ObjectNotFoundException {
+		
+		return ResponseEntity.ok().body(service.atualTodosEstados());
+	}
+	
 	@RequestMapping(value="/{estado}", method=RequestMethod.GET)
 	public ResponseEntity<?> listarPorEstado(@PathVariable String estado) throws ObjectNotFoundException {
 		

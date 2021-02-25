@@ -85,6 +85,51 @@ public class ConsultaDisponibilidadeService {
 		
 	}
 	
+	public List<String> atualTodosEstados(){
+		
+		List<String> ret = new ArrayList<>();
+		 
+		String add = "";
+		
+		try {	
+			final Document document = Jsoup.connect(url).get();
+			
+			for(Estado e : estadoRepo.findAll()) {
+				add = "";
+				add = add + e.getNome() + ": ";
+				for(Autorizador a : e.getAutorizadores()) {
+					
+					for(Element row : document.select("table.tabelaListagemDados tr")) {
+						
+						if(a.getNome().equals(row.select("td:nth-of-type(1)").text())) {
+							;
+							
+							if(row.select("td:nth-of-type(6)").outerHtml().contains("verde")) {
+								add = add + "Disponível em " + a.getNome() + " | ";
+							}else if(row.select("td:nth-of-type(6)").outerHtml().contains("amarela")) {
+								add = add + "Instável em " + a.getNome() + " | ";
+							}else {
+								add = add + "Indisponível em " + a.getNome() + " | ";
+							}
+						}	
+					}
+				}
+				ret.add(add);
+			}
+		
+		}catch (Exception ex) {
+			ex.printStackTrace();
+			
+		}
+		
+	
+		
+		return ret;
+		
+	}
+	
+	
+	
 	public String atualPorEstado(String UF) {
 		String ret = "";
 		
@@ -133,8 +178,6 @@ public class ConsultaDisponibilidadeService {
 			e.printStackTrace();
 		}
 		
-		
-		System.out.println("ASDIOJAASOIDIOASDJOIASJ >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+ ret);
 		return ret;
 	}
 	
