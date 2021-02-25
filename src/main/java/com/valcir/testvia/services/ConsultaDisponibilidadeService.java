@@ -15,8 +15,10 @@ import org.springframework.stereotype.Service;
 
 import com.valcir.testvia.domain.Autorizador;
 import com.valcir.testvia.domain.DisponibilidadeServicoNF;
+import com.valcir.testvia.domain.Estado;
 import com.valcir.testvia.repositories.AutorizadorRepository;
 import com.valcir.testvia.repositories.DisponibilidadeServicoNFRepository;
+import com.valcir.testvia.repositories.EstadoRepository;
 
 
 @Component 
@@ -29,16 +31,17 @@ public class ConsultaDisponibilidadeService {
 	private AutorizadorRepository autoRepo;
 	@Autowired
 	private DisponibilidadeServicoNFRepository dispoRepo;
+	@Autowired
+	private EstadoRepository estadoRepo;
 	
 	final String url = "http://www.nfe.fazenda.gov.br/portal/disponibilidade.aspx";
 	
 	private final long SEGUNDO = 1000; 
-    private final long MINUTO = SEGUNDO * 60; 
+   private final long MINUTO = SEGUNDO * 60; 
 
 	
     
 	@Scheduled(fixedDelay = MINUTO * 5)
-
 	public void verificarCadaCincoMinutos() {
 		try {			
 			final Document document = Jsoup.connect(url).get();
@@ -80,6 +83,59 @@ public class ConsultaDisponibilidadeService {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	public String atualPorEstado(String UF) {
+		String ret = "";
+		
+		try {			
+			final Document document = Jsoup.connect(url).get();
+			List<Estado> estados = new ArrayList<>();
+			Estado est = new Estado();
+			
+			estados = estadoRepo.findBySigla(UF);
+			
+			// Coleta do estado
+			if(estados.size() > 0) {
+				est = estados.get(0);
+				
+			}else {
+				return "Estado não encontrado";
+			}
+			
+			
+			//Percorrendo tabela na URL
+			for(Element row : document.select("table.tabelaListagemDados tr")) {				
+				
+				if(row.select("td:nth-of-type(1)").text().equals("")) {
+					continue;
+				}else {
+					
+					//Percorrendo autorizadores do estado
+					for(Autorizador a : est.getAutorizadores()) {
+						System.out.println("ASDIOJAASOIDIOASDJOIASJ >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+ row.select("td:nth-of-type(1)").text() +
+						"<<<<<<<<<<<<<<<" + a.getNome());
+						if(row.select("td:nth-of-type(1)").text().equals(a.getNome())) {						
+							
+							if(row.select("td:nth-of-type(6)").outerHtml().contains("verde")) {
+								ret = ret + "Disponível em " + a.getNome() + "\n";
+							}else if(row.select("td:nth-of-type(6)").outerHtml().contains("amarela")) {
+								ret = ret +"Instável em " + a.getNome() + "\n";
+							}else {
+								ret = ret + "Indisponível em " + a.getNome() + "\n";
+							}
+						}	
+					}
+				}
+			}
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		System.out.println("ASDIOJAASOIDIOASDJOIASJ >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+ ret);
+		return ret;
 	}
 	
 
