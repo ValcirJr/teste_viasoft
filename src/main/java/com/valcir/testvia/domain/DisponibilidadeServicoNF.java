@@ -1,5 +1,6 @@
 package com.valcir.testvia.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -10,16 +11,17 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class DisponibilidadeServicoNF {
+public class DisponibilidadeServicoNF implements Serializable{
 	
-	
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
 	@ManyToOne
-	@JoinColumn(name="estado_id")
-	private Estado estado;
+	@JoinColumn(name="autorizador_id")
+	private Autorizador autorizador;
 	
 	private Date momentoConsulta;
 	
@@ -29,10 +31,10 @@ public class DisponibilidadeServicoNF {
 		// TODO Auto-generated constructor stub
 	}
 
-	public DisponibilidadeServicoNF(Integer id, Estado estado, Date momentoConsulta, String disponibilidade) {
+	public DisponibilidadeServicoNF(Integer id, Autorizador autorizador, Date momentoConsulta, String disponibilidade) {
 		super();
 		this.id = id;
-		this.estado = estado;
+		this.autorizador = autorizador;
 		this.momentoConsulta = momentoConsulta;
 		this.disponibilidade = disponibilidade;
 	}
@@ -45,12 +47,12 @@ public class DisponibilidadeServicoNF {
 		this.id = id;
 	}
 
-	public Estado getEstado() {
-		return estado;
+	public Autorizador getAutorizador() {
+		return autorizador;
 	}
 
-	public void setEstado(Estado estado) {
-		this.estado = estado;
+	public void setAutorizador(Autorizador autorizador) {
+		this.autorizador = autorizador;
 	}
 
 	public Date getMomentoConsulta() {

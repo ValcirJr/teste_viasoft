@@ -1,20 +1,13 @@
 package com.valcir.testvia;
 
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
 
-
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.scheduling.annotation.Scheduled;
 
-
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import org.springframework.beans.factory.annotation.Autowired;
 import com.valcir.testvia.domain.Categoria;
 import com.valcir.testvia.domain.Cidade;
 import com.valcir.testvia.domain.Cliente;
