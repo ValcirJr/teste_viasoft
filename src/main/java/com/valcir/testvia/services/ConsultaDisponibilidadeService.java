@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import com.valcir.testvia.domain.Autorizador;
 import com.valcir.testvia.domain.DisponibilidadeServicoNF;
 import com.valcir.testvia.domain.Estado;
+import com.valcir.testvia.domain.EstadoDisponibilidade;
 import com.valcir.testvia.repositories.AutorizadorRepository;
 import com.valcir.testvia.repositories.DisponibilidadeServicoNFRepository;
 import com.valcir.testvia.repositories.EstadoRepository;
@@ -37,6 +38,8 @@ public class ConsultaDisponibilidadeService {
 	
 	private Integer maiorIndisponibilidade = 0;
 	private Integer indisponibilidade = 0;
+	private EstadoDisponibilidade estdisp;
+	
 	
 	
 	final String url = "http://www.nfe.fazenda.gov.br/portal/disponibilidade.aspx";
@@ -90,42 +93,25 @@ public class ConsultaDisponibilidadeService {
 		
 	}
 	
-	public List<String> atualTodosEstados(){
+	public List<EstadoDisponibilidade> atualTodosEstados(){
 		
-		List<String> ret = new ArrayList<>();
+		verificarCadaCincoMinutos();
+		List<EstadoDisponibilidade> ret = new ArrayList<>();
 		 
-		String add = "";
 		
-		try {	
-			final Document document = Jsoup.connect(url).get();
-			
-			for(Estado e : estadoRepo.findAll()) {
-				add = "";
-				add = add + e.getNome() + ": ";
-				for(Autorizador a : e.getAutorizadores()) {
+		estadoRepo.findAll().forEach(e -> {
+			e.getAutorizadores().forEach(a -> {
+					estdisp = new EstadoDisponibilidade();
+					estdisp.setEstado(e);
+					estdisp.setAutorizador(a);
+					estdisp.setDisponibilidade(a.getDisponiblidadeServicos().get(a.getDisponiblidadeServicos().size()-1));
+					System.out.println(estdisp.toString());
 					
-					for(Element row : document.select("table.tabelaListagemDados tr")) {
-						
-						if(a.getNome().equals(row.select("td:nth-of-type(1)").text())) {
-							;
-							
-							if(row.select("td:nth-of-type(6)").outerHtml().contains("verde")) {
-								add = add + "Disponível em " + a.getNome() + " | ";
-							}else if(row.select("td:nth-of-type(6)").outerHtml().contains("amarela")) {
-								add = add + "Instável em " + a.getNome() + " | ";
-							}else {
-								add = add + "Indisponível em " + a.getNome() + " | ";
-							}
-						}	
-					}
-				}
-				ret.add(add);
-			}
+					ret.add(estdisp);
+					
+			});
+		});
 		
-		}catch (Exception ex) {
-			ex.printStackTrace();
-			
-		}
 		return ret;
 		
 	}
