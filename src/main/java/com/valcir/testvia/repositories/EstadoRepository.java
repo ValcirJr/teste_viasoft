@@ -12,5 +12,6 @@ public interface EstadoRepository extends JpaRepository<Estado, Integer>{
 	
 	List<Estado> findBySigla(String sigla); 
 	List<Estado> findByNome(String nome);
+	List<Estado> findAll();
 	
 }

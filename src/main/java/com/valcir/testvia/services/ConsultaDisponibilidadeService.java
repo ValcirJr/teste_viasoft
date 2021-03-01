@@ -39,7 +39,7 @@ public class ConsultaDisponibilidadeService {
 	private Integer maiorIndisponibilidade = 0;
 	private Integer indisponibilidade = 0;
 	private EstadoDisponibilidade estdisp;
-	
+	private List<Estado> estados = new ArrayList<>();
 	
 	
 	final String url = "http://www.nfe.fazenda.gov.br/portal/disponibilidade.aspx";
@@ -108,7 +108,6 @@ public class ConsultaDisponibilidadeService {
 					System.out.println(estdisp.toString());
 					
 					ret.add(estdisp);
-					
 			});
 		});
 		
@@ -118,51 +117,22 @@ public class ConsultaDisponibilidadeService {
 	
 	
 	
-	public String atualPorEstado(String UF) {
-		String ret = "";
+	public List<EstadoDisponibilidade> atualPorEstado(String UF) {
 		
-		try {			
-			final Document document = Jsoup.connect(url).get();
-			List<Estado> estados = new ArrayList<>();
-			Estado est = new Estado();
-			
-			estados = estadoRepo.findBySigla(UF);
-			
-			// Coleta do estado
-			if(estados.size() > 0) {
-				est = estados.get(0);
-				
-			}else {
-				return "Estado não encontrado";
-			}
-			
-			
-			//Percorrendo tabela na URL
-			for(Element row : document.select("table.tabelaListagemDados tr")) {				
-				
-				if(row.select("td:nth-of-type(1)").text().equals("")) {
-					continue;
-				}else {
-					
-					//Percorrendo autorizadores do estado
-					for(Autorizador a : est.getAutorizadores()) {
-						
-						if(row.select("td:nth-of-type(1)").text().equals(a.getNome())) {						
-							
-							if(row.select("td:nth-of-type(6)").outerHtml().contains("verde")) {
-								ret = ret + "Disponível em " + a.getNome() + "\n";
-							}else if(row.select("td:nth-of-type(6)").outerHtml().contains("amarela")) {
-								ret = ret +"Instável em " + a.getNome() + "\n";
-							}else {
-								ret = ret + "Indisponível em " + a.getNome() + "\n";
-							}
-						}	
-					}
-				}
-			}
-			
-		}catch (Exception e) {
-			e.printStackTrace();
+		verificarCadaCincoMinutos();
+		List<EstadoDisponibilidade> ret = new ArrayList<>();
+		estados = estadoRepo.findBySigla(UF);
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		// Coleta do estado
+		if(estados.size() > 0) {
+			System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");	
+			estados.get(0).getAutorizadores().forEach(a -> {
+				estdisp = new EstadoDisponibilidade();
+				estdisp.setEstado(estados.get(0));
+				estdisp.setAutorizador(a);
+				estdisp.setDisponibilidade(a.getDisponiblidadeServicos().get(a.getDisponiblidadeServicos().size()-1));
+				ret.add(estdisp);
+			});
 		}
 		
 		return ret;
