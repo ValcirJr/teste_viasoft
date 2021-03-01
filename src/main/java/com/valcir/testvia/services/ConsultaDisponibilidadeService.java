@@ -1,5 +1,6 @@
 package com.valcir.testvia.services;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,6 +34,10 @@ public class ConsultaDisponibilidadeService {
 	private DisponibilidadeServicoNFRepository dispoRepo;
 	@Autowired
 	private EstadoRepository estadoRepo;
+	
+	private Integer maiorIndisponibilidade = 0;
+	private Integer indisponibilidade = 0;
+	
 	
 	final String url = "http://www.nfe.fazenda.gov.br/portal/disponibilidade.aspx";
 	
@@ -121,9 +126,6 @@ public class ConsultaDisponibilidadeService {
 			ex.printStackTrace();
 			
 		}
-		
-	
-		
 		return ret;
 		
 	}
@@ -158,8 +160,7 @@ public class ConsultaDisponibilidadeService {
 					
 					//Percorrendo autorizadores do estado
 					for(Autorizador a : est.getAutorizadores()) {
-						System.out.println("ASDIOJAASOIDIOASDJOIASJ >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+ row.select("td:nth-of-type(1)").text() +
-						"<<<<<<<<<<<<<<<" + a.getNome());
+						
 						if(row.select("td:nth-of-type(1)").text().equals(a.getNome())) {						
 							
 							if(row.select("td:nth-of-type(6)").outerHtml().contains("verde")) {
@@ -179,6 +180,30 @@ public class ConsultaDisponibilidadeService {
 		}
 		
 		return ret;
+	}
+	
+	public List<String> diponibilidadeEntreDatas(String dataInicial, String dataFinal) {
+		return dispoRepo.findDisponibilidadesEntreDatas(dataInicial, dataFinal);
+	}
+	
+	public List<Estado> maiorIndisponibilidade() {
+		List<String> disponibilidadeEstados = new ArrayList<>();
+		List<Estado> retorno = new ArrayList<>();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		disponibilidadeEstados = diponibilidadeEntreDatas("2021-01-01",sdf.format(new Date()));
+				
+		disponibilidadeEstados.forEach((e) -> {
+			if(e.contains("Indisponível")) {
+				indisponibilidade++;
+				if(maiorIndisponibilidade < indisponibilidade) {
+					retorno.clear();
+					retorno.add(estadoRepo.findByNome(e.split(",")[1]).get(0));
+				}else if(maiorIndisponibilidade == indisponibilidade) {
+					retorno.add(estadoRepo.findByNome(e).get(0));
+				}
+			}
+		});
+		return retorno;
 	}
 	
 

@@ -11,5 +11,6 @@ import com.valcir.testvia.domain.Estado;
 public interface EstadoRepository extends JpaRepository<Estado, Integer>{
 	
 	List<Estado> findBySigla(String sigla); 
+	List<Estado> findByNome(String nome);
 	
 }
