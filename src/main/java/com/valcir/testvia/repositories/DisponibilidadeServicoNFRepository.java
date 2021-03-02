@@ -25,12 +25,11 @@ public interface DisponibilidadeServicoNFRepository extends JpaRepository<Dispon
 	List<DisponibilidadeServicoNF> findDisponibilidadesEntreDatasPorEstado
 				( @Param("datainicial")String datainicial, @Param("datafinal")String datafinal, @Param("sigla")String sigla);
 
-	@Query(value = "SELECT dispserv.DISPONIBILIDADE, est.NOME, dispserv.MOMENTO_CONSULTA\r\n"
+	@Query(value = "SELECT dispserv.ID, dispserv.DISPONIBILIDADE, est.NOME, dispserv.MOMENTO_CONSULTA\r\n"
 			+ " FROM DISPONIBILIDADE_SERVICONF AS dispserv\r\n"
 			+ "INNER JOIN ESTADO AS est \r\n"
 			+ "WHERE dispserv.MOMENTO_CONSULTA >= :datainicial AND dispserv.MOMENTO_CONSULTA <= DATEADD(DAY, +1, :datafinal) \r\n"
 			+ "ORDER BY est.NOME", nativeQuery = true)
-	
 	List<String> findDisponibilidadesEntreDatas (@Param("datainicial")String datainicial, @Param("datafinal")String datafinal);
 
 	

@@ -3,6 +3,7 @@ package com.valcir.testvia.services;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import org.jsoup.Jsoup;
@@ -122,10 +123,8 @@ public class ConsultaDisponibilidadeService {
 		verificarCadaCincoMinutos();
 		List<EstadoDisponibilidade> ret = new ArrayList<>();
 		estados = estadoRepo.findBySigla(UF);
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		// Coleta do estado
 		if(estados.size() > 0) {
-			System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");	
 			estados.get(0).getAutorizadores().forEach(a -> {
 				estdisp = new EstadoDisponibilidade();
 				estdisp.setEstado(estados.get(0));
@@ -138,22 +137,27 @@ public class ConsultaDisponibilidadeService {
 		return ret;
 	}
 	
-	public List<String> diponibilidadeEntreDatas(String dataInicial, String dataFinal) {
-		return dispoRepo.findDisponibilidadesEntreDatas(dataInicial, dataFinal);
+	public HashSet<DisponibilidadeServicoNF> diponibilidadeEntreDatas(String dataInicial, String dataFinal) {
+		HashSet<DisponibilidadeServicoNF> ret = new HashSet<>();
+		
+		dispoRepo.findDisponibilidadesEntreDatas(dataInicial, dataFinal).forEach(d -> {
+				ret.add(dispoRepo.findById(Integer.valueOf(d.split(",")[0])).orElse(null));
+		});
+		return ret;
 	}
 	
 	public List<Estado> maiorIndisponibilidade() {
 		List<String> disponibilidadeEstados = new ArrayList<>();
 		List<Estado> retorno = new ArrayList<>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		disponibilidadeEstados = diponibilidadeEntreDatas("2021-01-01",sdf.format(new Date()));
-				
+		disponibilidadeEstados =dispoRepo.findDisponibilidadesEntreDatas("2021-01-01",sdf.format(new Date()));
+		
 		disponibilidadeEstados.forEach((e) -> {
 			if(e.contains("Indisponível")) {
 				indisponibilidade++;
 				if(maiorIndisponibilidade < indisponibilidade) {
 					retorno.clear();
-					retorno.add(estadoRepo.findByNome(e.split(",")[1]).get(0));
+					retorno.add(estadoRepo.findByNome(e.split(",")[2]).get(0));
 				}else if(maiorIndisponibilidade == indisponibilidade) {
 					retorno.add(estadoRepo.findByNome(e).get(0));
 				}

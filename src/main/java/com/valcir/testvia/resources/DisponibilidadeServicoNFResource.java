@@ -33,7 +33,6 @@ public class DisponibilidadeServicoNFResource {
 	@RequestMapping(value="/{datainicial}/{datafinal}", method=RequestMethod.GET)
 	public ResponseEntity<?> listarPorEstado(@PathVariable String datainicial,
 											 @PathVariable String datafinal) throws ObjectNotFoundException {
-		
 		return ResponseEntity.ok().body(service.diponibilidadeEntreDatas(datainicial, datafinal));
 	}
 	
